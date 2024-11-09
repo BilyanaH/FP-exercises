@@ -1,0 +1,37 @@
+#lang racket
+
+;2
+(define (not x) (if x #f #t))
+(define (and x y) (if x y #f))
+(define (or x y) (if x #t y))
+(define (xor x y) (if (or (and  x (not y)) (and y (not x)) )#t #f))
+
+;3
+(define (fact n)
+(if (= n 0) 1 (* n(fact(- n 1)))))
+
+;4
+(define (fib n)
+  (if(< n 2) n (+(fib (- n 1))(fib (- n 2)))))
+
+;5
+;(define (count-digits n)
+;(if (< n 10) 1 (+ 1 (count-digits (/ n 10) )) ))
+(define (count-digits n)
+(cond
+[(and (< n 10)(> n 0)) 1]
+[(>= n 10) (+ (count-digits (/ n 10)) 1)]
+[(< n 0) (count-digits (abs n))]
+))
+
+
+;7
+(define (fact1 n)
+(define (iter n)
+(if (= n 0) 1 (* n(iter(- n 1)))))
+  (iter n))
+
+;8
+(define (fib1 n)
+  (define (iter n)
+    (if (< n 2)  )

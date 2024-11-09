@@ -1,0 +1,65 @@
+#lang racket
+;1
+(define assoc-empty '())
+
+;2
+(define (assoc-set l k v)
+  (if (null? l) (list(cons k v))
+      (if (equal? (caar l) k)
+          (cons (cons k v) (cdr l))
+          (cons (car l) (assoc-set (cdr l) k v)))))
+
+;(assoc-set '((foo . 1) (bar . 2)) 'qux 3)
+; Резултат: ((foo . 1) (bar . 2) (qux . 3))
+
+;(assoc-set '((foo . 1) (bar . 2)) 'foo 3)
+; Резултат: ((foo . 3) (bar . 2))
+
+
+;3
+(define (assoc-get l k)
+   (if (null? l) #f
+       (if (equal? (caar l) k) (cdar l)
+           (assoc-get (cdr l) k))))
+
+(define (assoc-get2 l k)
+  (cdar (filter (lambda (p) (equal? (car p) k)) l)))
+
+;(assoc-get '((foo . 1) (bar . 2)) 'foo)
+; Резултат: 1
+
+;(assoc-get '((foo . 1) (bar . 2)) 'qux)
+; Резултат: #f
+
+;4
+(define (assoc-map f l)
+  (if (null? l) '()
+      (cons (cons (caar l ) (f(cdar l)))
+            (assoc-map f (cdr l)))))
+
+;(assoc-map (lambda (x) (* x 2)) '((foo . 1) (bar . 2) (ada . 3) (hey . 4)))
+
+(define (assoc-map2 f l)
+  (map (lambda (p) (cons (car p) (f (cdr p)))) l))
+
+;5
+(define (assoc-filter p l)
+  (cond ((assoc? l) '())
+    ((p (cdar l)) (cons (car l) (assoc-filter p (cdr l))))
+    (else (assoc-filter p (cdr l)))))
+
+;(assoc-filter (lambda (x) (> x 1)) '((foo . 1) (bar . 2)(ada . -3) (hey . 4)))
+
+(define (assoc-filter2 p l)
+  (filter (lambda  (x) (p (cdr x))) l))
+
+;6
+(define (assoc? l)
+  (if (null? l) #t
+      (and (not (equal? (caar l) (assoc? (cdr l)))))))
+
+;(assoc? '((foo . 1) (bar . 2)))
+; Резултат: #t
+
+;(assoc? '((foo . 1) (foo . 2)))
+; Резултат: #f (повтарящи се ключове)

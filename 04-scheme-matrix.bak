@@ -1,0 +1,70 @@
+#lang racket
+
+;1
+(define (at n l) ;ot predniq put
+  (cond
+    ((null? l) #f)
+    ((= n 0) (car l))
+    (else (at (- n 1) (cdr l)))))
+
+(define m1 '((1 2 3)
+            (4 5 6)
+            (7 8 9)))
+
+(define (mat-at m i j)
+  (at j (at i m)))
+
+
+;2
+(define (map f l); ot lekcii
+(if (null? l) '()
+(cons (f (car l)) (map f (cdr l)))))
+
+(define (mat-map f m)
+  (map (lambda (row) (map f row)) m))
+
+;3
+
+(define (accumulate op nv a b term next) ; ot lekcii
+(if (> a b) nv
+(op (term a) (accumulate op nv (next a) b term next))))
+
+(define (mat? m)
+ (and 
+   (list? m)
+   (mat-map number? m)
+   ((length ))
+  ))
+;nzz
+
+
+;4
+(define (scalmul x m)
+  (mat-map (lambda (el) (* el x) ) m))
+
+
+ ;5
+  (define (transpose m)
+  (if (null? (car m))  
+      '()              
+      (cons (map car m)          
+            (transpose (map cdr m)))))
+ ;6
+
+  (define m '((1 2 3)
+             (4 5 6)))
+
+ (define n '((7 8)
+                (9 10)
+                (11 12)))
+
+
+(define (product row-m col-n)                
+    (if (or (null? row-m) (null? col-n))         
+        0
+        (+ (* (car row-m) (car col-n)) (product (cdr row-m) (cdr col-n)))))
+  
+(define (matmul m n)
+  (map (lambda (row-m)
+         (map (lambda(col-n) (product row-m col-n)) (transpose n)))
+ m ))
